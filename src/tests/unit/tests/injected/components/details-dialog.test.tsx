@@ -9,6 +9,7 @@ import { FeatureFlags } from '../../../../../common/feature-flags';
 import { DetailsDialog, DetailsDialogDeps, DetailsDialogProps } from '../../../../../injected/components/details-dialog';
 import { DecoratedAxeNodeResult } from '../../../../../injected/scanner-utils';
 import { DictionaryStringTo } from '../../../../../types/common-types';
+import { Mock, It } from 'typemoq';
 
 type DetailsDialogTestCase = {
     isDevToolsOpen: boolean;
@@ -70,6 +71,8 @@ describe('DetailsDialogTest', () => {
         };
         const expectedFailedRules: DictionaryStringTo<DecoratedAxeNodeResult> = {};
         expectedFailedRules[ruleId] = expectedNodeResult;
+        const onUserConfigChangedMock = Mock.ofInstance((dialog: DetailsDialog) => {});
+        const onDevToolChangedMock = Mock.ofInstance((dialog: DetailsDialog) => {});
 
         const dialogDetailsHandlerMockObject = {
             getRuleUrl: () => 'test-url',
@@ -78,7 +81,12 @@ describe('DetailsDialogTest', () => {
             isInspectButtonDisabled: () => !isDevToolOpen,
             getFailureInfo: () => 'Failure 1 of 1 for this target',
             componentDidMount: () => {},
+            onUserConfigChanged: onUserConfigChangedMock.object,
+            onDevToolChanged: onDevToolChangedMock.object,
         };
+
+        onUserConfigChangedMock.setup(o => o(It.isAny())).verifiable();
+        onDevToolChangedMock.setup(o => o(It.isAny())).verifiable();
 
         const deps: DetailsDialogDeps = {
             windowUtils: null,
@@ -113,6 +121,10 @@ describe('DetailsDialogTest', () => {
         const onLayoutDidMountMock = {};
 
         const testObject = new DetailsDialog(props);
+
+        onUserConfigChangedMock.verifyAll();
+        onDevToolChangedMock.verifyAll();
+
         (testObject as any).onHideDialog = onHideDialogMock;
         (testObject as any).onClickNextButton = onClickNextButtonMock;
         (testObject as any).onClickBackButton = onClickBackButtonMock;
