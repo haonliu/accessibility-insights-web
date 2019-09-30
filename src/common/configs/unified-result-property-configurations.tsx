@@ -6,6 +6,7 @@ import { SnippetCardRow } from '../../DetailsView/components/cards/snippet-card-
 import { FixInstructionProcessor } from '../../injected/fix-instruction-processor';
 import { MarkupFormatter } from '../../issue-filing/common/markup/markup-formatter';
 import { ReactFCWithDisplayName } from '../react/named-fc';
+import { IssueFilingUrlStringUtils } from '../../issue-filing/common/issue-filing-url-string-utils';
 
 export type PropertyType = 'css-selector' | 'how-to-fix-web' | 'snippet';
 export const AllPropertyTypes: PropertyType[] = ['css-selector', 'how-to-fix-web', 'snippet'];
@@ -20,14 +21,17 @@ export interface CardRowProps {
     propertyData: any;
 }
 
+export type IssueFilingDetailsSection = (
+    propertyKey: string,
+    propertyValue: string,
+    markup: MarkupFormatter,
+    getSection: (header: string, content: string) => string[],
+) => string[];
+
 export interface PropertyConfiguration {
     cardRow: ReactFCWithDisplayName<CardRowProps>;
-    issueFilingDetailsSection?: (
-        propertyKey: string,
-        propertyValue: string,
-        markup: MarkupFormatter,
-        getSection: (header: string, content: string) => string[],
-    ) => string[];
+    issueFilingDetailsSection?: IssueFilingDetailsSection;
+    conciseText?: (value: any) => string;
 }
 
 export const howToFixConfiguration: PropertyConfiguration = {
@@ -43,6 +47,9 @@ export const cssSelectorConfiguration: PropertyConfiguration = {
         getSection: (header: string, content: string) => string[],
     ) => {
         return getSection('Element Path', propertyValue);
+    },
+    conciseText: (selector: string) => {
+        return IssueFilingUrlStringUtils.getSelectorLastPart(selector);
     },
 };
 
