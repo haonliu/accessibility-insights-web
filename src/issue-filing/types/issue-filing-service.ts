@@ -1,15 +1,15 @@
-// Copyright (c) Microsoft Corporation. All rights reserved.
-// Licensed under the MIT License.
 import { BrowserAdapter } from '../../common/browser-adapters/browser-adapter';
 import { ReactFCWithDisplayName } from '../../common/react/named-fc';
 import { IssueFilingServicePropertiesMap } from '../../common/types/store-data/user-configuration-store';
 import { EnvironmentInfo } from './../../common/environment-info-provider';
-import { CreateIssueDetailsTextData } from './../../common/types/create-issue-details-text-data';
+import { UnifiedCreateIssueDetailsTextData } from './../../common/types/unified-create-issue-details-text-data';
 import { SettingsFormProps } from './settings-form-props';
 
+// Copyright (c) Microsoft Corporation. All rights reserved.
+// Licensed under the MIT License.
 export type IssueFilingUrlProvider<Settings> = (
     data: Settings,
-    issueData: CreateIssueDetailsTextData,
+    issueData: UnifiedCreateIssueDetailsTextData,
     environmentInfo: EnvironmentInfo,
 ) => string;
 
@@ -24,7 +24,7 @@ export interface IssueFilingService<Settings = {}> {
     fileIssue: (
         browserAdapter: BrowserAdapter,
         servicePropertiesMap: IssueFilingServicePropertiesMap,
-        issueData: CreateIssueDetailsTextData,
+        issueData: UnifiedCreateIssueDetailsTextData,
         environmentInfo: EnvironmentInfo,
     ) => void;
 }

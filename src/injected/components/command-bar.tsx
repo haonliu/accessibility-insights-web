@@ -12,6 +12,7 @@ import { CreateIssueDetailsTextData } from '../../common/types/create-issue-deta
 import { UserConfigurationStoreData } from '../../common/types/store-data/user-configuration-store';
 import { DictionaryStringTo } from '../../types/common-types';
 import { DecoratedAxeNodeResult } from '../scanner-utils';
+import { UnifiedCreateIssueDetailsTextData } from '../../common/types/unified-create-issue-details-text-data';
 
 export type CommandBarDeps = CopyIssueDetailsButtonDeps & IssueFilingButtonDeps;
 
@@ -42,7 +43,7 @@ export const CommandBar = NamedFC<CommandBarProps>('CommandBar', props => {
         const failedRuleIds: string[] = Object.keys(props.failedRules);
         const ruleName: string = failedRuleIds[props.currentRuleIndex];
         const ruleResult: DecoratedAxeNodeResult = props.failedRules[ruleName];
-        const issueData: CreateIssueDetailsTextData = {
+        const issueData: UnifiedCreateIssueDetailsTextData = {
             pageTitle: document.title,
             pageUrl: document.URL,
             ruleResult,
@@ -56,7 +57,7 @@ export const CommandBar = NamedFC<CommandBarProps>('CommandBar', props => {
         );
     };
 
-    const renderFileIssueButton = (issueData: CreateIssueDetailsTextData): JSX.Element => {
+    const renderFileIssueButton = (issueData: UnifiedCreateIssueDetailsTextData): JSX.Element => {
         return (
             <IssueFilingButton
                 deps={props.deps}

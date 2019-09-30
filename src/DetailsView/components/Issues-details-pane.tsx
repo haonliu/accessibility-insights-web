@@ -1,17 +1,18 @@
 // Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT License.
+import { IssueDetailsTextGenerator } from 'background/issue-details-text-generator';
 import * as React from 'react';
 
-import { IssueDetailsTextGenerator } from 'background/issue-details-text-generator';
 import { CopyIssueDetailsButton } from '../../common/components/copy-issue-details-button';
 import { GuidanceLinks } from '../../common/components/guidance-links';
 import { GuidanceTags, GuidanceTagsDeps } from '../../common/components/guidance-tags';
 import { IssueFilingButton, IssueFilingButtonDeps } from '../../common/components/issue-filing-button';
 import { NewTabLink } from '../../common/components/new-tab-link';
 import { ToastDeps } from '../../common/components/toast';
-import { CreateIssueDetailsTextData } from '../../common/types/create-issue-details-text-data';
 import { FeatureFlagStoreData } from '../../common/types/store-data/feature-flag-store-data';
+import { UnifiedResult, UnifiedRule } from '../../common/types/store-data/unified-data-interface';
 import { UserConfigurationStoreData } from '../../common/types/store-data/user-configuration-store';
+import { UnifiedCreateIssueDetailsTextData } from '../../common/types/unified-create-issue-details-text-data';
 import { CheckType } from '../../injected/components/details-dialog';
 import { FixInstructionPanel, FixInstructionPanelDeps } from '../../injected/components/fix-instruction-panel';
 import { DecoratedAxeNodeResult } from '../../injected/scanner-utils';
@@ -34,6 +35,8 @@ export interface IssuesDetailsPaneProps {
     pageUrl: string;
     featureFlagData: FeatureFlagStoreData;
     userConfigurationStoreData: UserConfigurationStoreData;
+    unifiedRule: UnifiedRule;
+    unifiedResult: UnifiedResult;
 }
 
 interface IssueDetailsState {
@@ -70,7 +73,7 @@ export class IssuesDetailsPane extends React.Component<IssuesDetailsPaneProps, I
         );
     }
 
-    private getFileIssueDetailsButton(issueData: CreateIssueDetailsTextData): JSX.Element {
+    private getFileIssueDetailsButton(issueData: UnifiedCreateIssueDetailsTextData): JSX.Element {
         return (
             <IssueFilingButton
                 deps={this.props.deps}
@@ -86,10 +89,11 @@ export class IssuesDetailsPane extends React.Component<IssuesDetailsPaneProps, I
     }
 
     private renderSingleIssue(result: DecoratedAxeNodeResult): JSX.Element {
-        const issueData: CreateIssueDetailsTextData = {
+        const issueData: UnifiedCreateIssueDetailsTextData = {
             pageTitle: this.props.pageTitle,
             pageUrl: this.props.pageUrl,
-            ruleResult: result,
+            result: this.props.unifiedResult,
+            rule: this.props.unifiedRule,
         };
 
         return (

@@ -7,8 +7,8 @@ import * as React from 'react';
 import { EnvironmentInfoProvider } from '../../common/environment-info-provider';
 import { IssueFilingActionMessageCreator } from '../../common/message-creators/issue-filing-action-message-creator';
 import { UserConfigMessageCreator } from '../../common/message-creators/user-config-message-creator';
-import { CreateIssueDetailsTextData } from '../../common/types/create-issue-details-text-data';
 import { IssueFilingServicePropertiesMap } from '../../common/types/store-data/user-configuration-store';
+import { UnifiedCreateIssueDetailsTextData } from '../../common/types/unified-create-issue-details-text-data';
 import {
     IssueFilingSettingsContainer,
     IssueFilingSettingsContainerDeps,
@@ -23,7 +23,7 @@ export interface IssueFilingDialogProps {
     deps: IssueFilingDialogDeps;
     isOpen: boolean;
     selectedIssueFilingService: IssueFilingService;
-    selectedIssueData: CreateIssueDetailsTextData;
+    selectedIssueData: UnifiedCreateIssueDetailsTextData;
     issueFilingServicePropertiesMap: IssueFilingServicePropertiesMap;
     onClose: (ev: React.SyntheticEvent) => void;
 }

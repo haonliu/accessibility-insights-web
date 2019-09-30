@@ -1,23 +1,30 @@
 // Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT License.
-import { CreateIssueDetailsTextData } from './../../common/types/create-issue-details-text-data';
+import { forOwn } from 'lodash';
+
+import { getPropertyConfiguration } from '../../common/configs/unified-result-property-configurations';
+import { UnifiedCreateIssueDetailsTextData } from '../../common/types/unified-create-issue-details-text-data';
 
 export type IssueUrlCreationUtils = {
-    getTitle: (data: CreateIssueDetailsTextData) => string;
+    getTitle: (data: UnifiedCreateIssueDetailsTextData) => string;
     getSelectorLastPart: (selector: string) => string;
-    standardizeTags: (data: CreateIssueDetailsTextData) => string[];
+    standardizeTags: (data: UnifiedCreateIssueDetailsTextData) => string[];
 };
 
-const getTitle = (data: CreateIssueDetailsTextData): string => {
+const getTitle = (data: UnifiedCreateIssueDetailsTextData): string => {
     const standardTags = standardizeTags(data);
     let prefix = standardTags.join(',');
     if (prefix.length > 0) {
         prefix = prefix + ': ';
     }
 
-    const selectorLastPart = getSelectorLastPart(data.ruleResult.selector);
+    // loop through identifiers
+    const conciseIdentifier: string = '';
+    forOwn(data.result.identifiers, (propertyData, propertyName) => {
+        conciseIdentifier.concat(getPropertyConfiguration(propertyName).conciseText(propertyData));
+    });
 
-    return `${prefix}${data.ruleResult.help} (${selectorLastPart})`;
+    return `${prefix}${data.rule.description} (${conciseIdentifier})`;
 };
 
 const getSelectorLastPart = (selector: string): string => {
@@ -33,10 +40,10 @@ const getSelectorLastPart = (selector: string): string => {
     return selectorLastPart;
 };
 
-const standardizeTags = (data: CreateIssueDetailsTextData): string[] => {
-    const guidanceLinkTextTags = data.ruleResult.guidanceLinks.map(link => link.text.toUpperCase());
+const standardizeTags = (data: UnifiedCreateIssueDetailsTextData): string[] => {
+    const guidanceLinkTextTags = data.rule.guidance.map(link => link.text.toUpperCase());
     const tagsFromGuidanceLinkTags = [];
-    data.ruleResult.guidanceLinks.map(link => (link.tags ? link.tags.map(tag => tagsFromGuidanceLinkTags.push(tag.displayText)) : []));
+    data.rule.guidance.map(link => (link.tags ? link.tags.map(tag => tagsFromGuidanceLinkTags.push(tag.displayText)) : []));
     return guidanceLinkTextTags.concat(tagsFromGuidanceLinkTags);
 };
 

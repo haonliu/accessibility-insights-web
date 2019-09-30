@@ -52,7 +52,10 @@ export interface UnifiedResult {
     uid: string;
     status: InstanceResultStatus;
     ruleId: string;
-    identifiers: StoredInstancePropertyBag;
+    identifiers: {
+        shortName: string;
+        storedInstancePropertyBag: StoredInstancePropertyBag;
+    };
     descriptors: StoredInstancePropertyBag;
     resolution: StoredInstancePropertyBag;
 }

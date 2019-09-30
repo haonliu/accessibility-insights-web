@@ -4,9 +4,9 @@ import { HowToFixWebCardRow } from '../../DetailsView/components/cards/how-to-fi
 import { PathCardRow } from '../../DetailsView/components/cards/path-card-row';
 import { SnippetCardRow } from '../../DetailsView/components/cards/snippet-card-row';
 import { FixInstructionProcessor } from '../../injected/fix-instruction-processor';
+import { IssueFilingUrlStringUtils } from '../../issue-filing/common/issue-filing-url-string-utils';
 import { MarkupFormatter } from '../../issue-filing/common/markup/markup-formatter';
 import { ReactFCWithDisplayName } from '../react/named-fc';
-import { IssueFilingUrlStringUtils } from '../../issue-filing/common/issue-filing-url-string-utils';
 
 export type PropertyType = 'css-selector' | 'how-to-fix-web' | 'snippet';
 export const AllPropertyTypes: PropertyType[] = ['css-selector', 'how-to-fix-web', 'snippet'];
@@ -30,44 +30,35 @@ export type IssueFilingDetailsSection = (
 
 export interface PropertyConfiguration {
     cardRow: ReactFCWithDisplayName<CardRowProps>;
-    issueFilingDetailsSection?: IssueFilingDetailsSection;
-    conciseText?: (value: any) => string;
+    issueFilingDetailsSection: IssueFilingDetailsSection;
+    conciseText: (value: any) => string;
 }
 
-export const howToFixConfiguration: PropertyConfiguration = {
+export const howToFixConfiguration: Partial<PropertyConfiguration> = {
     cardRow: HowToFixWebCardRow,
 };
 
 export const cssSelectorConfiguration: PropertyConfiguration = {
     cardRow: PathCardRow,
-    issueFilingDetailsSection: (
-        _: string,
-        propertyValue: string,
-        markup: MarkupFormatter,
-        getSection: (header: string, content: string) => string[],
-    ) => {
-        return getSection('Element Path', propertyValue);
+    issueFilingDetailsSection: (key, value, markup, getSection) => {
+        return getSection('Element Path', value);
     },
     conciseText: (selector: string) => {
         return IssueFilingUrlStringUtils.getSelectorLastPart(selector);
     },
 };
 
-export const snippetConfiguration: PropertyConfiguration = {
+export const snippetConfiguration: Partial<PropertyConfiguration> = {
     cardRow: SnippetCardRow,
-    issueFilingDetailsSection: (
-        _: string,
-        propertyValue: string,
-        markup: MarkupFormatter,
-        getSection: (header: string, content: string) => string[],
-    ) => {
-        return getSection('Snippet', propertyValue);
+    issueFilingDetailsSection: (key, value, markup, getSection) => {
+        return getSection('Snippet', value);
     },
 };
 
 type PropertyIdToConfigurationMap = {
-    [key in PropertyType]: PropertyConfiguration;
+    [key in PropertyType]: Partial<PropertyConfiguration>;
 };
+
 const propertyIdToConfigurationMap: PropertyIdToConfigurationMap = {
     'css-selector': cssSelectorConfiguration,
     'how-to-fix-web': howToFixConfiguration,

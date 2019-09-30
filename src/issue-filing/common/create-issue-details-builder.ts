@@ -5,21 +5,13 @@ import { compact, forOwn } from 'lodash';
 
 import { getPropertyConfiguration } from '../../common/configs/unified-result-property-configurations';
 import { EnvironmentInfo } from '../../common/environment-info-provider';
-import { CreateIssueDetailsTextData } from '../../common/types/create-issue-details-text-data';
-import { UnifiedResult } from '../../common/types/store-data/unified-data-interface';
-import { StoredInstancePropertyBag, UnifiedRule } from './../../common/types/store-data/unified-data-interface';
+import { UnifiedCreateIssueDetailsTextData } from '../../common/types/unified-create-issue-details-text-data';
+import { StoredInstancePropertyBag } from './../../common/types/store-data/unified-data-interface';
 import { IssueDetailsBuilder } from './issue-details-builder';
 import { MarkupFormatter } from './markup/markup-formatter';
 
 export const createIssueDetailsBuilder = (markup: MarkupFormatter): IssueDetailsBuilder => {
-    const getter = (
-        environmentInfo: EnvironmentInfo,
-        data: CreateIssueDetailsTextData,
-        unifiedResult?: UnifiedResult,
-        unifiedRule?: UnifiedRule,
-    ): string => {
-        const result = data.ruleResult;
-
+    const getter = (environmentInfo: EnvironmentInfo, data: UnifiedCreateIssueDetailsTextData): string => {
         const { howToFixSection, link, sectionHeader, snippet, sectionHeaderSeparator, footerSeparator, sectionSeparator } = markup;
 
         const getSectionFromPropertyBag = (propertyBag: StoredInstancePropertyBag) => {
@@ -36,16 +28,16 @@ export const createIssueDetailsBuilder = (markup: MarkupFormatter): IssueDetails
         };
 
         const lines = [
-            getSection('Issue', `${snippet(unifiedRule.description)} (${link(unifiedRule.url, unifiedRule.id)})`),
+            getSection('Issue', `${snippet(data.rule.description)} (${link(data.rule.url, data.rule.id)})`),
 
             getSection('Target application', link(data.pageUrl, data.pageTitle)),
 
-            getSectionFromPropertyBag(unifiedResult.identifiers),
+            getSectionFromPropertyBag(data.result.identifiers),
 
-            getSectionFromPropertyBag(unifiedResult.descriptors),
+            getSectionFromPropertyBag(data.result.descriptors),
 
             // need to refactor how to fix section to take typeof CreationData.howToFix
-            getSection('How to fix', howToFixSection(result.failureSummary)),
+            // getSection('How to fix', howToFixSection(result.failureSummary)),
 
             getSection('Environment', environmentInfo.browserSpec),
 

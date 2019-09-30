@@ -1,8 +1,9 @@
 // Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT License.
 import { title } from 'content/strings/application';
+
 import { EnvironmentInfo } from '../../../common/environment-info-provider';
-import { CreateIssueDetailsTextData } from '../../../common/types/create-issue-details-text-data';
+import { UnifiedCreateIssueDetailsTextData } from '../../../common/types/unified-create-issue-details-text-data';
 import { createIssueDetailsBuilder } from '../../common/create-issue-details-builder';
 import { HTTPQueryBuilder } from '../../common/http-query-builder';
 import { IssueDetailsBuilder } from '../../common/issue-details-builder';
@@ -10,8 +11,8 @@ import { IssueFilingUrlStringUtils, IssueUrlCreationUtils } from '../../common/i
 import { HTMLFormatter } from '../../common/markup/html-formatter';
 import { AzureBoardsIssueFilingSettings, AzureBoardsWorkItemType } from './azure-boards-issue-filing-settings';
 
-const buildTags = (createIssueData: CreateIssueDetailsTextData, standardTags: string[]): string => {
-    const tags = ['Accessibility', title, `rule: ${createIssueData.ruleResult.ruleId}`, ...standardTags];
+const buildTags = (createIssueData: UnifiedCreateIssueDetailsTextData, standardTags: string[]): string => {
+    const tags = ['Accessibility', title, `rule: ${createIssueData.rule.id}`, ...standardTags];
     return tags.join('; ');
 };
 
@@ -20,7 +21,11 @@ export const createAzureBoardsIssueFilingUrlProvider = (
     issueDetailsBuilder: IssueDetailsBuilder,
     queryBuilderProvider: () => HTTPQueryBuilder,
 ) => {
-    return (settingsData: AzureBoardsIssueFilingSettings, issueData: CreateIssueDetailsTextData, environmentInfo: EnvironmentInfo) => {
+    return (
+        settingsData: AzureBoardsIssueFilingSettings,
+        issueData: UnifiedCreateIssueDetailsTextData,
+        environmentInfo: EnvironmentInfo,
+    ) => {
         const titleField = stringUtils.getTitle(issueData);
         const standardTags = stringUtils.standardizeTags(issueData);
         const tags = buildTags(issueData, standardTags);

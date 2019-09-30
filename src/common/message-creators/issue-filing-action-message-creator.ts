@@ -1,11 +1,12 @@
 // Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT License.
 import { BaseActionPayload, FileIssuePayload } from 'background/actions/action-payloads';
+
 import { FILE_ISSUE_CLICK, TelemetryEventSource } from '../extension-telemetry-events';
 import { Message } from '../message';
 import { Messages } from '../messages';
 import { TelemetryDataFactory } from '../telemetry-data-factory';
-import { CreateIssueDetailsTextData } from '../types/create-issue-details-text-data';
+import { UnifiedCreateIssueDetailsTextData } from './../types/unified-create-issue-details-text-data';
 import { ActionMessageDispatcher } from './action-message-dispatcher';
 
 type SupportedMouseEvent = React.MouseEvent<HTMLElement> | React.SyntheticEvent<Element, Event>;
@@ -34,7 +35,7 @@ export class IssueFilingActionMessageCreator {
         this.dispatcher.sendTelemetry(FILE_ISSUE_CLICK, telemetry);
     }
 
-    public fileIssue(event: SupportedMouseEvent, serviceKey: string, issueData: CreateIssueDetailsTextData): void {
+    public fileIssue(event: SupportedMouseEvent, serviceKey: string, issueData: UnifiedCreateIssueDetailsTextData): void {
         const messageType = Messages.IssueFiling.FileIssue;
         const telemetry = this.telemetryFactory.forFileIssueClick(event, this.source, serviceKey);
         const payload: FileIssuePayload = {

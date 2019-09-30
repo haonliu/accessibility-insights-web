@@ -2,9 +2,9 @@
 // Licensed under the MIT License.
 import { BrowserAdapter } from '../../common/browser-adapters/browser-adapter';
 import { EnvironmentInfo } from '../../common/environment-info-provider';
-import { CreateIssueDetailsTextData } from '../../common/types/create-issue-details-text-data';
 import { IssueFilingServicePropertiesMap } from '../../common/types/store-data/user-configuration-store';
 import { IssueFilingUrlProvider } from '../types/issue-filing-service';
+import { UnifiedCreateIssueDetailsTextData } from './../../common/types/unified-create-issue-details-text-data';
 
 export const createFileIssueHandler = <Settings>(
     getUrl: IssueFilingUrlProvider<Settings>,
@@ -13,7 +13,7 @@ export const createFileIssueHandler = <Settings>(
     return (
         browserAdapter: BrowserAdapter,
         servicePropertiesMap: IssueFilingServicePropertiesMap,
-        issueData: CreateIssueDetailsTextData,
+        issueData: UnifiedCreateIssueDetailsTextData,
         environmentInfo: EnvironmentInfo,
     ): void => {
         const serviceConfig = getSettings(servicePropertiesMap);
