@@ -10,6 +10,7 @@ steps:
       env:
           ELECTRON_MIRROR: $(ELECTRON_MIRROR)
           ELECTRON_CUSTOM_DIR: $(ELECTRON_CUSTOM_DIR)
+          ELECTRON_CUSTOM_FILENAME: $(ELECTRON_CUSTOM_FILENAME_WIN)
 
     - task: SFP.build-tasks.custom-build-task-1.EsrpCodeSigning@1
       displayName: 'sign dist'
